@@ -28,6 +28,30 @@ public class TarefaService {
     }
 
     public void delete(Long id){
+        if (!tarefaRepository.existsById(id)) {
+            throw new RuntimeException("Tarefa não encontrada");
+        }
+
         tarefaRepository.deleteById(id);
+    }
+
+    public Tarefa getById(Long id) {
+        return tarefaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Tarefa não encontrada"));
+    }
+
+    public Tarefa update(Long id, Tarefa dadosAtualizados) {
+        Tarefa tarefa = tarefaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Tarefa não encontrada"));
+
+        tarefa.setNome(dadosAtualizados.getNome());
+        tarefa.setDescricao(dadosAtualizados.getDescricao());
+        tarefa.setLembrete(dadosAtualizados.getLembrete());
+        tarefa.setDataEntrega(dadosAtualizados.getDataEntrega());
+        tarefa.setStatus(dadosAtualizados.getStatus());
+        tarefa.setPrioridade(dadosAtualizados.getPrioridade());
+        tarefa.setTipoAtividade(dadosAtualizados.getTipoAtividade());
+
+        return tarefaRepository.save(tarefa);
     }
 }

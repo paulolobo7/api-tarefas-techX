@@ -7,10 +7,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 @RestController
-@RequestMapping("/api/tarefa")
+@RequestMapping("/api/tarefas")
 public class TarefaController {
 
     private final TarefaService tarefaService;
@@ -18,21 +19,40 @@ public class TarefaController {
         this.tarefaService = tarefaService;
     }
 
-    @PostMapping("/create")
-    public Tarefa createTarefa(@RequestBody Tarefa tarefa){
-        return tarefaService.create(tarefa);
+    @PostMapping
+    public ResponseEntity<Tarefa> createTarefa(@RequestBody Tarefa tarefa) {
+        Tarefa tarefaCriada = tarefaService.create(tarefa);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(tarefaCriada);
     }
 
     @GetMapping
     public List<Tarefa> listTarefa(){
+
         return tarefaService.getAll();
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         tarefaService.delete(id);
+
+        return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/{id}")
+    public Tarefa getById(@PathVariable Long id) {
+        return tarefaService.getById(id);
+    }
+
+    @PutMapping("/{id}")
+    public Tarefa update(
+            @PathVariable Long id,
+            @RequestBody Tarefa tarefa
+    ) {
+        return tarefaService.update(id, tarefa);
+    }
 
 
 }
