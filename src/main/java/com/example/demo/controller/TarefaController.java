@@ -4,6 +4,7 @@ package com.example.demo.controller;
 import com.example.demo.model.Tarefa;
 import com.example.demo.service.TarefaService;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class TarefaController {
     }
 
     @PostMapping
-    public ResponseEntity<Tarefa> createTarefa(@RequestBody Tarefa tarefa) {
+    public ResponseEntity<Tarefa> createTarefa(@Valid @RequestBody Tarefa tarefa) {
         Tarefa tarefaCriada = tarefaService.create(tarefa);
 
         return ResponseEntity
@@ -49,7 +50,7 @@ public class TarefaController {
     @PutMapping("/{id}")
     public Tarefa update(
             @PathVariable Long id,
-            @RequestBody Tarefa tarefa
+            @RequestBody @Valid Tarefa tarefa
     ) {
         return tarefaService.update(id, tarefa);
     }
